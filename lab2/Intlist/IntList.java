@@ -82,7 +82,40 @@ public class IntList {
 
     public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+
+/*        // ITERATIVE
+        // address edge case where A == null
+        if (A == null) {
+            A = B;
+            return A;
+        }
+
+        // create pointer P
+        IntList P = A;
+
+        // use P to traverse to the last element of IntList A
+        // where (last element of A).rest = null
+        while (P.rest != null) {
+            P = P.rest;
+        }
+
+        // Connect A to B by making (last element of A).rest = B
+        P.rest = B;
+
+        // Return the modified/connected IntList A&B
+        return A; */
+
+        // RECURSIVE
+        if (A == null) {
+            A = B;
+        }
+
+        else {
+            A.rest = dcatenate(A.rest, B);
+            // to be destructive, have to mutate A
+        }
+
+        return A;
     }
 
     /**
@@ -91,7 +124,16 @@ public class IntList {
      */
     public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+
+        // Base case: when find end of IntList A (null), return pointer to B
+        if (A == null) {
+            return B;
+        }
+
+        else {
+            return new IntList(A.first, catenate(A.rest, B));
+        }
+
     }
 
 
