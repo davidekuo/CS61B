@@ -27,7 +27,7 @@ public class NBody {
 		return planets;
 	}
 
-	public static void drawUniverse(Planet[] planets) {
+	private static void drawUniverse(Planet[] planets) {
 		StdDraw.clear();
 		StdDraw.picture(0, 0, "images/starfield.jpg");
 		for (Planet p : planets) {
@@ -37,7 +37,7 @@ public class NBody {
 		StdDraw.pause(10);
 	}
 
-	public static Planet[] updatePlanets(Planet[] planets, double dT) {
+	private static Planet[] updatePlanets(Planet[] planets, double dT) {
 		double[] xForces = new double[planets.length];
 		double[] yForces = new double[planets.length];
 			

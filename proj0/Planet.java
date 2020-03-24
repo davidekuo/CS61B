@@ -2,14 +2,14 @@ import java.math.*;
 
 public class Planet {
 
-	double xxPos;
-	double yyPos;
-	double xxVel;
-	double yyVel;
-	double mass;
-	String imgFileName;
+	public double xxPos;
+	public double yyPos;
+	public double xxVel;
+	public double yyVel;
+	public double mass;
+	public String imgFileName;
 
-	static final double G = 6.67e-11;
+	private static final double G = 6.67e-11;
 
 	public Planet(double xP, double yP, double xV, double yV, double m, String img) {
 		xxPos = xP;
@@ -49,7 +49,7 @@ public class Planet {
 		return calcForceExertedBy(p) * (p.yyPos - this.yyPos) / calcDistance(p);
 	}
 
-	public boolean equals(Planet p) {
+	private boolean equals(Planet p) {
 		if(this.xxPos == p.xxPos &&
 			this.yyPos == p.yyPos &&
 			this.xxVel == p.xxVel &&
