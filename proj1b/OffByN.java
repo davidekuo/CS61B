@@ -8,10 +8,6 @@ public class OffByN implements CharacterComparator {
 
     @Override
     public boolean equalChars(char x, char y) {
-        if (java.lang.Math.abs(x - y) == offset) {
-            return true;
-        } else {
-            return false;
-        }
+        return java.lang.Math.abs(x - y) == offset;
     }
 }
