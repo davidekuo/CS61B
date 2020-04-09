@@ -43,6 +43,12 @@ public class TestPalindrome {
     }
 
     @Test
+    public void testIsPalindrome5() {
+        String test = "Ama";
+        assertFalse(palindrome.isPalindrome(test));
+    }
+
+    @Test
     public void testIsPalindromeOffByOne1() {
         String test = "noon";
         assertFalse(palindrome.isPalindrome(test, obo));
@@ -64,5 +70,11 @@ public class TestPalindrome {
     public void testIsPalindromeOffByOne4() {
         String test = "this";
         assertTrue(palindrome.isPalindrome(test, obo));
+    }
+
+    @Test
+    public void testIsPalindromeOffByOne5() {
+        String test = "This";
+        assertFalse(palindrome.isPalindrome(test, obo));
     }
 }
