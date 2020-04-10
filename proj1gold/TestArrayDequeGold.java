@@ -3,11 +3,15 @@ import org.junit.Test;
 
 public class TestArrayDequeGold {
 
-    /*
-    private String toString(StudentArrayDeque x) {
+
+/*    private String toString(StudentArrayDeque x) {
         String s = "";
         for (int i = 0; i < x.size(); i += 1) {
-            s += x.get(i).toString() + " ";
+            if (x.get(i) == null) {
+                s += "null ";
+            } else {
+                s += x.get(i).toString() + " ";
+            }
         }
         return s;
     }
@@ -15,11 +19,14 @@ public class TestArrayDequeGold {
     private String toString(ArrayDequeSolution x) {
         String s = "";
         for (int i = 0; i < x.size(); i += 1) {
-            s += x.get(i).toString() + " ";
+            if (x.get(i) == null) {
+                s += "null ";
+            } else {
+                s += x.get(i).toString() + " ";
+            }
         }
         return s;
-    }
-    */
+    }*/
 
     /*
     @Test
@@ -85,10 +92,8 @@ public class TestArrayDequeGold {
         StudentArrayDeque<Integer> test = new StudentArrayDeque<>();
         ArrayDequeSolution<Integer> soln = new ArrayDequeSolution<>();
 
-        int numIter = 100;
+        int numIter = 1000;
         String trace = "";
-
-        //System.out.println("Testing StudentArrayDeque");
 
         for (int i = 0; i < numIter; i += 1) {
             double rand = StdRandom.uniform();
@@ -96,57 +101,65 @@ public class TestArrayDequeGold {
             Integer t;
 
             if (rand < 0.25) {
+                trace += "addLast(" + i + ")\n";
+
                 test.addLast(i);
                 t = test.get(test.size() - 1);
 
                 soln.addLast(i);
                 s = soln.get(soln.size() - 1);
 
-                trace += "addLast(" + i + ")\n";
                 //System.out.println("addLast(" + i + "):");
             } else if (rand < 0.5) {
+                trace += "addFirst(" + i + ")\n";
                 test.addFirst(i);
                 t = test.get(0);
 
                 soln.addFirst(i);
                 s = test.get(0);
 
-                trace += "addFirst(" + i + ")\n";
                 //System.out.println("addFirst(" + i + "):");
             } else if (rand < 0.75) {
-                if (test.size() == 0) {
+                if (soln.size() == 0) {
+                    trace += "addLast(" + i + ")\n";
+
                     test.addLast(i);
                     t = test.get(test.size() - 1);
 
                     soln.addLast(i);
                     s = soln.get(soln.size() - 1);
 
-                    trace += "addLast(" + i + ")\n";
                     //System.out.println("addLast(" + i + "):");
                 } else {
+                    trace += "removeLast()\n";
+
                     t = test.removeLast();
                     s = soln.removeLast();
-                    trace += "removeLast()\n";
+
                     //System.out.println("removeLast():");
                 }
             } else {
-                if (test.size() == 0) {
+                if (soln.size() == 0) {
+                    trace += "addFirst(" + i + ")\n";
+
                     test.addFirst(i);
                     t = test.get(0);
 
                     soln.addFirst(i);
                     s = test.get(0);
 
-                    trace += "addFirst(" + i + ")\n";
                     //System.out.println("addFirst(" + i + "):");
                 } else {
+                    trace += "removeFirst()\n";
+
                     t = test.removeFirst();
                     s = soln.removeFirst();
-                    trace += "removeFirst()\n";
+
                     //System.out.println("removeFirst():");
                 }
             }
-            //System.out.println("expect: " + s + "\nactual: " + t + "\n");
+            //System.out.println("expect: " + s + " - " + toString(soln));
+            //System.out.println("actual: " + t + " - "  + toString(test) + "\n");
             assertEquals(trace, s, t);
         }
     }
