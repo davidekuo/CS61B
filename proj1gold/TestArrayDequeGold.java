@@ -88,12 +88,12 @@ public class TestArrayDequeGold {
         int numIter = 100;
         String trace = "";
 
-        System.out.println("Testing StudentArrayDeque");
+        //System.out.println("Testing StudentArrayDeque");
 
         for (int i = 0; i < numIter; i += 1) {
             double rand = StdRandom.uniform();
-            Integer s = 0;
-            Integer t = 1;
+            Integer s;
+            Integer t;
 
             if (rand < 0.25) {
                 test.addLast(i);
