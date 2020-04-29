@@ -20,7 +20,6 @@ public class GuitarString {
 
         int capacity = (int) Math.round(SR / frequency);
         buffer = new ArrayRingBuffer<>(capacity);
-        pluck();
     }
 
 
