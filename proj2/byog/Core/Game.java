@@ -13,6 +13,7 @@ public class Game {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+
     }
 
     /**
@@ -32,7 +33,36 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
-        TETile[][] finalWorldFrame = null;
+        String s = input.toLowerCase();
+
+        /* input string must:
+            1) start with 'N' for New Game,
+            2) be followed by a positive integer of any length,
+            3) end with 'S' to denote the end of the seed integer
+        */
+        if (s.charAt(0) != 'n' ||
+                s.charAt(s.length() - 1) != 's' ||
+                !s.substring(1, input.length() - 1).matches("[0-9]+")) {
+            throw new IllegalArgumentException("Input must be composed of 'N' + " +
+                    "a positive integer + 'S'. Your input: " + input + " is invalid.");
+        }
+
+        int seed = Integer.parseInt(s.substring(1, s.length() - 1));
+
+        RoomsHallwaysMap map = new RoomsHallwaysMap(WIDTH, HEIGHT, seed);
+        TETile[][] finalWorldFrame = map.generateWorld(30);
         return finalWorldFrame;
+    }
+
+    public static void main(String[] args) {
+
+        TERenderer ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
+
+        Game g = new Game();
+        TETile[][] world = g.playWithInputString("N1234S");
+
+        ter.renderFrame(world);
+
     }
 }
