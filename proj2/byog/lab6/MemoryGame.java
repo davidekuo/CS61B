@@ -93,16 +93,8 @@ public class MemoryGame {
             StdDraw.pause(500);
             drawFrame("" + c);
             StdDraw.pause(1000);
-
-            StdDraw.clear(Color.BLACK);
-            drawHeader();
-            StdDraw.show();
+            drawFrame(" ");
         }
-
-        playerTurn = true;
-        StdDraw.clear(Color.BLACK);
-        drawHeader();
-        StdDraw.show();
     }
 
     public String solicitNCharsInput(int n) {
@@ -132,6 +124,8 @@ public class MemoryGame {
 
             String key = generateRandomString(round);
             flashSequence(key);
+            playerTurn = true;
+            drawFrame(" ");
             String input = solicitNCharsInput(round);
 
             if (key.compareTo(input) == 0) {
