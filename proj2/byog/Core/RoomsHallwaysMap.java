@@ -7,18 +7,17 @@ import byog.TileEngine.Tileset;
 import java.util.Random;
 import java.util.ArrayList;
 import java.awt.Point;
+import java.io.Serializable;
 
-public class RoomsHallwaysMap {
-
-    //private static final long SEED = 2873123;
-    //private static final Random RANDOM = new Random(SEED);
-
-    int width;
-    int height;
-    Random RANDOM;
+public class RoomsHallwaysMap implements Serializable {
+    private static final long SERIALVERSIONUID = 3L;
+    private int width;
+    private int height;
+    private Random RANDOM;
+    private ArrayList<Room> rooms;
+    private ArrayList<Point> walls;
     TETile[][] map;
-    ArrayList<Room> rooms;
-    ArrayList<Point> walls;
+    Point player;
 
     public RoomsHallwaysMap(int w, int h, int s) {
         width = w;
@@ -40,13 +39,13 @@ public class RoomsHallwaysMap {
 
     private Room generateRandomRoom() {
         int minRoomSize = 3;
-        int roomWidth = RANDOM.nextInt(width / 5) + minRoomSize;
-        int roomHeight = RANDOM.nextInt(height / 5) + minRoomSize;
-        // minRoomSize to keep rooms from getting to small
-        // divide by 5 to keep rooms from getting too large
+        int roomWidth = RANDOM.nextInt(width / 10) + minRoomSize;
+        int roomHeight = RANDOM.nextInt(height / 10) + minRoomSize;
+        // minRoomSize to keep rooms from getting too small
+        // divide by 10 to keep rooms from getting too large
 
-        int llX = RANDOM.nextInt(width - roomWidth -2) + 2;
-        int llY = RANDOM.nextInt(height - roomHeight -2) + 2;
+        int llX = RANDOM.nextInt(width - roomWidth - 2) + 2;
+        int llY = RANDOM.nextInt(height - roomHeight - 2) + 2;
         // - 2 + 2 to keep rooms away from map edges to leave space for walls
 
         Room newRoom = new Room(llX, llY, llX + roomWidth, llY + roomHeight);
@@ -94,7 +93,7 @@ public class RoomsHallwaysMap {
     public void addRandomRoom(int n) {
         for (int i = 0; i < n; i++) {
             Room r = generateRandomRoom();
-            if (! hasRoomOverlap(r)) {
+            if (!hasRoomOverlap(r)) {
                 addRoom(r);
             }
         }
@@ -111,14 +110,14 @@ public class RoomsHallwaysMap {
 
     private ArrayList<Point> validNeighbors(int x, int y) {
         Point[] neighbors = new Point[] {
-                new Point(x, y + 1),
-                new Point(x, y - 1),
-                new Point(x - 1, y),
-                new Point(x + 1, y),
-                new Point(x + 1, y + 1),
-                new Point(x + 1, y - 1),
-                new Point(x - 1, y + 1),
-                new Point(x - 1, y - 1)
+            new Point(x, y + 1),
+            new Point(x, y - 1),
+            new Point(x - 1, y),
+            new Point(x + 1, y),
+            new Point(x + 1, y + 1),
+            new Point(x + 1, y - 1),
+            new Point(x - 1, y + 1),
+            new Point(x - 1, y - 1)
         };
 
         ArrayList<Point> valid = new ArrayList<>();
@@ -142,9 +141,9 @@ public class RoomsHallwaysMap {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (map[x][y] == null) {
-                    if (nextToFloor(x,y)) {
+                    if (nextToFloor(x, y)) {
                         map[x][y] = Tileset.WALL;
-                        walls.add(new Point(x,y));
+                        walls.add(new Point(x, y));
                     } else {
                         map[x][y] = Tileset.NOTHING;
                     }
@@ -176,10 +175,24 @@ public class RoomsHallwaysMap {
         map[doorPoint.x][doorPoint.y] = Tileset.LOCKED_DOOR;
     }
 
+    private void addPlayer() {
+        Room playerRoom = rooms.get(RANDOM.nextInt(rooms.size()));
+        int minX = playerRoom.ll.x;
+        int maxX = playerRoom.ur.x;
+        int minY = playerRoom.ll.y;
+        int maxY = playerRoom.ur.y;
+        int playerX = RANDOM.nextInt(maxX - minX) + minX;
+        int playerY = RANDOM.nextInt(maxY - minY) + minY;
+
+        map[playerX][playerY] = Tileset.PLAYER;
+        player = new Point(playerX, playerY);
+    }
+
     public TETile[][] generateWorld(int numRooms) {
         addRandomRoom(numRooms);
         fillRest();
         addDoor();
+        addPlayer();
         return map;
     }
 
