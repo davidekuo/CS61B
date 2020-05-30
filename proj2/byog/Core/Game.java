@@ -34,10 +34,6 @@ public class Game implements Serializable {
     private TETile[][] world;
     private boolean gameIsActive;
 
-    public Game() {
-        ter.initialize(WIDTH, HEIGHT);
-    }
-
     private void drawMainMenu() {
         StdDraw.clear(Color.BLACK);
 
@@ -129,8 +125,6 @@ public class Game implements Serializable {
     }
 
     private void endGame() {
-        saveGame();
-
         StdDraw.clear(Color.BLACK);
         StdDraw.setFont(titleFont);
         StdDraw.setPenColor(Color.WHITE);
@@ -215,7 +209,7 @@ public class Game implements Serializable {
             System.out.println(c);
             processMove(c);
         }
-
+        saveGame();
         endGame();
     }
 
@@ -268,8 +262,10 @@ public class Game implements Serializable {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+        ter.initialize(WIDTH, HEIGHT);
         drawMainMenu();
         readMainInput();
+        System.exit(0);
     }
 
     /**
@@ -351,19 +347,18 @@ public class Game implements Serializable {
 
     public static void main(String[] args) {
 
-        TERenderer ter = new TERenderer();
-        ter.initialize(WIDTH, HEIGHT);
         Game g = new Game();
 
+        /*
         // Test playWithInputString()
-        //g.playWithInputString("N999SDDDWWWDDD");
-        //g.playWithInputString("N999SDDD:Q");
-        //g.playWithInputString("LWWWDDD");
-        //g.playWithInputString("L:Q");
+        // t1 should equal t3, t2 should equal t4
+        TETile[][] t1 = g.playWithInputString("N999SDDDWWWDDD");
+        TETile[][] t2 = g.playWithInputString("N999SDDD:Q");
+        TETile[][] t3 = g.playWithInputString("LWWWDDD");
+        TETile[][] t4 = g.playWithInputString("L:Q");
+        */
 
         // Test playWithKeyboard()
         g.playWithKeyboard();
-
-        System.exit(0);
     }
 }
