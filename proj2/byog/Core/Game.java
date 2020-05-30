@@ -311,7 +311,7 @@ public class Game implements Serializable {
 
             map = new RoomsHallwaysMap(WIDTH, HEIGHT, seed);
             world = map.generateWorld(50);
-            ter.renderFrame(world);
+            // ter.renderFrame(world);
             // StdDraw.pause(1000);
 
             for (char m : moves) {
@@ -323,7 +323,8 @@ public class Game implements Serializable {
             if (quit != null) {
                 saveGame();
             }
-        } else if (mL.matches()) {
+        }
+        if (mL.matches()) {
             moves = mL.group(1).toCharArray();
             quit = mL.group(2);
 
@@ -352,7 +353,6 @@ public class Game implements Serializable {
 
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
-
         Game g = new Game();
 
         // Test playWithInputString()
@@ -365,6 +365,5 @@ public class Game implements Serializable {
         g.playWithKeyboard();
 
         System.exit(0);
-
     }
 }
