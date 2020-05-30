@@ -8,7 +8,10 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 import java.awt.Font;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +25,7 @@ public class Game {
     private final Font smallFont = new Font("Monaco", Font.BOLD, 15);
     private final Font hudFont = new Font("Monaco", Font.PLAIN, 12);
 
-    private final TERenderer ter = new TERenderer();
+    private TERenderer ter = new TERenderer();
     private RoomsHallwaysMap map;
     private TETile[][] world;
     private boolean gameIsActive;
@@ -127,7 +130,7 @@ public class Game {
             fIn.close();
             in.close();
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (java.io.IOException | ClassNotFoundException e) {
             e.printStackTrace();
             playWithKeyboard();
         }
@@ -311,18 +314,20 @@ public class Game {
 
     public static void main(String[] args) {
 
+        TERenderer ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
         Game g = new Game();
 
-        /*
         // Test playWithInputString()
-        // t1 should equal t3, t2 should equal t4
-        TETile[][] t1 = g.playWithInputString("N999SDDDWWWDDD");
-        TETile[][] t2 = g.playWithInputString("N999SDDD:Q");
-        TETile[][] t3 = g.playWithInputString("LWWWDDD");
-        TETile[][] t4 = g.playWithInputString("L:Q");
-        */
+
+        //TETile[][] t1 = g.playWithInputString("n3415218040718096461ssdsddaddaa:q");
+        //ter.renderFrame(t1);
+
+        //TETile[][] t2 = g.playWithInputString("LDDD:Q");
+        //ter.renderFrame(t2);
+
 
         // Test playWithKeyboard()
-        g.playWithKeyboard();
+        // g.playWithKeyboard();
     }
 }
