@@ -312,16 +312,16 @@ public class Game implements Serializable {
             map = new RoomsHallwaysMap(WIDTH, HEIGHT, seed);
             world = map.generateWorld(50);
             ter.renderFrame(world);
-            StdDraw.pause(1000);
+            // StdDraw.pause(1000);
 
             for (char m : moves) {
                 processMove(m);
-                ter.renderFrame(world);
-                StdDraw.pause(500);
+                // ter.renderFrame(world);
+                // StdDraw.pause(500);
             }
 
             if (quit != null) {
-                endGame();
+                saveGame();
             }
         } else if (mL.matches()) {
             moves = mL.group(1).toCharArray();
@@ -332,20 +332,19 @@ public class Game implements Serializable {
 
             loadGame();
             world = map.map;
-            ter.renderFrame(world);
-            StdDraw.pause(1000);
+            // ter.renderFrame(world);
+            // StdDraw.pause(1000);
 
             for (char m : moves) {
                 processMove(m);
-                ter.renderFrame(world);
-                StdDraw.pause(500);
+                // ter.renderFrame(world);
+                // StdDraw.pause(500);
             }
 
             if (quit != null) {
-                endGame();
+                saveGame();
             }
         }
-
         return world;
     }
 
@@ -357,8 +356,10 @@ public class Game implements Serializable {
         Game g = new Game();
 
         // Test playWithInputString()
-        //g.playWithInputString("N1234SWDSAD:Q");
-        //g.playWithInputString("LWDSAD:Q");
+        //g.playWithInputString("N999SDDDWWWDDD");
+        //g.playWithInputString("N999SDDD:Q");
+        //g.playWithInputString("LWWWDDD");
+        //g.playWithInputString("L:Q");
 
         // Test playWithKeyboard()
         g.playWithKeyboard();
