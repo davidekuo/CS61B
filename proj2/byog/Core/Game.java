@@ -60,7 +60,7 @@ public class Game implements Serializable {
         char input = getNextChar();
         if (input == 'n' || input == 'N') {
             drawSeedMenu();
-            int s = readRandomSeed();
+            long s = readRandomSeed();
             playNewGame(s);
         } else if (input == 'l' || input == 'L') {
             System.out.println("Attempting to load previous game");
@@ -88,7 +88,7 @@ public class Game implements Serializable {
         StdDraw.show();
     }
 
-    private int readRandomSeed() {
+    private long readRandomSeed() {
         String input = "";
 
         while (!StdDraw.isKeyPressed(83) || input.equals("")) {
@@ -105,7 +105,7 @@ public class Game implements Serializable {
             }
         }
 
-        int seed = Integer.parseInt(input);
+        long seed = Long.parseLong(input);
         return seed;
     }
 
@@ -178,7 +178,7 @@ public class Game implements Serializable {
         }
     }
 
-    private void playNewGame(int seed) {
+    private void playNewGame(long seed) {
         map = new RoomsHallwaysMap(WIDTH, HEIGHT, seed);
         world = map.generateWorld(50);
 
@@ -286,7 +286,7 @@ public class Game implements Serializable {
         // drawn if the same inputs had been given to playWithKeyboard().
 
         String s = input.toLowerCase();
-        int seed;
+        long seed;
         char[] moves;
         String quit;
 
@@ -301,7 +301,7 @@ public class Game implements Serializable {
         Matcher mL = pL.matcher(s);
 
         if (mN.matches()) {
-            seed = Integer.parseInt(mN.group(1));
+            seed = Long.parseLong(mN.group(1));
             moves = mN.group(2).toCharArray();
             quit = mN.group(3);
 

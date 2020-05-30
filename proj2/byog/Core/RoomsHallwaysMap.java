@@ -19,7 +19,7 @@ public class RoomsHallwaysMap implements Serializable {
     TETile[][] map;
     Point player;
 
-    public RoomsHallwaysMap(int w, int h, int s) {
+    public RoomsHallwaysMap(int w, int h, long s) {
         width = w;
         height = h;
         RANDOM = new Random(s);
