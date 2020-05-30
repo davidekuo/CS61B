@@ -8,28 +8,21 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 import java.awt.Font;
 
-import java.io.Serializable;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Game implements Serializable {
-
-    private static final long SERIALVERSIONUID = 4L;
-
+public class Game {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
 
-    private Font titleFont = new Font("Monaco", Font.BOLD, 30);
-    private Font smallFont = new Font("Monaco", Font.BOLD, 15);
-    private Font hudFont = new Font("Monaco", Font.PLAIN, 12);
+    private final Font titleFont = new Font("Monaco", Font.BOLD, 30);
+    private final Font smallFont = new Font("Monaco", Font.BOLD, 15);
+    private final Font hudFont = new Font("Monaco", Font.PLAIN, 12);
 
-    private TERenderer ter = new TERenderer();
+    private final TERenderer ter = new TERenderer();
     private RoomsHallwaysMap map;
     private TETile[][] world;
     private boolean gameIsActive;
@@ -63,14 +56,11 @@ public class Game implements Serializable {
             long s = readRandomSeed();
             playNewGame(s);
         } else if (input == 'l' || input == 'L') {
-            System.out.println("Attempting to load previous game");
             loadGame();
             playSavedGame();
         } else if (input == 'q' || input == 'Q') {
-            System.out.println("Quit");
             endGame();
         } else {
-            System.out.println("Input must be N, L, or Q.");
             readMainInput();
         }
     }
@@ -97,16 +87,13 @@ public class Game implements Serializable {
                 if (Character.isDigit(c)) {
                     input += c;
                 } else {
-                    System.out.println("Invalid entry. Starting over.");
                     input = "";
                 }
                 drawSeedMenu();
                 drawInput(input);
             }
         }
-
-        long seed = Long.parseLong(input);
-        return seed;
+        return Long.parseLong(input);
     }
 
     private void saveGame() {
@@ -117,9 +104,7 @@ public class Game implements Serializable {
             out.writeObject(map);
             fOut.close();
             out.close();
-            System.out.println("Game saved.");
         } catch (java.io.IOException e) {
-            System.out.println("IO Exception");
             e.printStackTrace();
         }
     }
@@ -141,14 +126,8 @@ public class Game implements Serializable {
             map = (RoomsHallwaysMap) in.readObject();
             fIn.close();
             in.close();
-            System.out.println("Previous game loaded.");
 
-        } catch (java.io.IOException e) {
-            System.out.println("IO Exception");
-            e.printStackTrace();
-            playWithKeyboard();
-        } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFound Exception");
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             playWithKeyboard();
         }
@@ -162,7 +141,7 @@ public class Game implements Serializable {
                 int mX = (int) StdDraw.mouseX();
                 int mY = (int) StdDraw.mouseY();
 
-                String hud = "";
+                String hud;
                 if (mX < 0 || mX >= WIDTH
                         || mY < 0 || mY >= HEIGHT) {
                     hud = "";
@@ -206,7 +185,6 @@ public class Game implements Serializable {
 
         while (gameIsActive) {
             char c = getNextChar();
-            System.out.println(c);
             processMove(c);
         }
         saveGame();
@@ -217,7 +195,6 @@ public class Game implements Serializable {
         if (c == ':') {
             char next = getNextChar();
             if (next == 'q' || next == 'Q') {
-                System.out.println("Quit");
                 gameIsActive = false;
             }
         } else if (c == 'w' || c == 'W') {
@@ -225,35 +202,25 @@ public class Game implements Serializable {
                 world[map.player.x][map.player.y] = Tileset.FLOOR;
                 world[map.player.x][map.player.y + 1] = Tileset.PLAYER;
                 map.player.y += 1;
-            } else {
-                System.out.println("W: invalid move");
             }
         } else if (c == 'a' || c == 'A') {
             if (world[map.player.x - 1][map.player.y].description().equals("floor")) {
                 world[map.player.x][map.player.y] = Tileset.FLOOR;
                 world[map.player.x - 1][map.player.y] = Tileset.PLAYER;
                 map.player.x -= 1;
-            } else {
-                System.out.println("A: invalid move");
             }
         } else if (c == 's' || c == 'S') {
             if (world[map.player.x][map.player.y - 1].description().equals("floor")) {
                 world[map.player.x][map.player.y] = Tileset.FLOOR;
                 world[map.player.x][map.player.y - 1] = Tileset.PLAYER;
                 map.player.y -= 1;
-            } else {
-                System.out.println("S: invalid move");
             }
         } else if (c == 'd' || c == 'D') {
             if (world[map.player.x + 1][map.player.y].description().equals("floor")) {
                 world[map.player.x][map.player.y] = Tileset.FLOOR;
                 world[map.player.x + 1][map.player.y] = Tileset.PLAYER;
                 map.player.x += 1;
-            } else {
-                System.out.println("D: invalid move");
             }
-        } else {
-            System.out.println(c + ": Must enter W, A, S, D, or :Q");
         }
     }
 
@@ -323,9 +290,6 @@ public class Game implements Serializable {
         if (mL.matches()) {
             moves = mL.group(1).toCharArray();
             quit = mL.group(2);
-
-            System.out.println(moves);
-            System.out.println(quit);
 
             loadGame();
             world = map.map;
