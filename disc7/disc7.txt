@@ -1,0 +1,106 @@
+CS61B Discussion 7
+
+1. ASYMPTOTIC NOTATION
+
+1.1
+O(1), O(log n), O(n), O(n log n), O(n^2 log n), O(n^3), O(2^n), O(n!), O(n^n)
+
+1.2
+true
+true
+false - omega
+false - O
+true
+true
+true
+
+
+2. ANALYZING RUNTIME
+
+2.1
+Best case: Theta(N)
+    - break statement is only for inner for loop
+Worst case: Theta(N + M)
+    - b/c j is initialized outside nested loops, it does not reset once it reaches M
+    - thus only have outer loop after 1 iteration through inner loop
+
+2.2
+Best case: Theta(N log N)
+    - N log N for mrpoolsort()
+    - for i = 0, there is no array[i] == array[j] -> x remains false -> if (!x) is true -> returns false
+Worst case: Theta(N^2)
+    - Have a true array[i] == array[j] for every i -> x = true for every iteration of i -> runs through entire nested for loop before returning true
+A. mystery() returns true if each element of the array has a duplicate such that array[i] == array[j] is true, returns false if any element of the array is unique
+B. Use a map ADT where key = int and value = count.
+        ?? O(N) memory
+        ?? O(1) memory if sort first, then go through - however sorting is usually O(n log n) time
+
+2.3
+Best case: Theta(N log M)
+    - In best case, comeOn() is always false, and j always *= 2 rather than += 1
+    - Run-time of inner loop would then be log M
+    - Run-time of outer loop is N
+Worst case: Theta(N x M)
+    - In worst case, comeOn() is always true, and j always += 1
+    - Run-time of inner loop is M
+    - Run-time of outer loop is N
+
+
+3. HAVE YOU EVER WENT FAST?
+
+3a.
+Original solution does not take advantage of the fact that array A is SORTED
+
+public static boolean findSum(int[] A, int x) {
+    int left = 0;
+    int right = A.length - 1;
+    while(left <= right) {
+        if (A[left] + A[right] == x) {return true;}
+        if (A[left] + A[right] < x) {left++;}
+        if (A[left] + A[right] > x) {right--;}
+}
+return false;
+}
+
+3b.
+Original runtime: Theta(N^2)
+Improved runtime: Theta(N)
+
+
+4. CTCI
+
+4.1 Union
+
+import java.util.HashSet;
+public static int[] union(int[] a, int[] b) {
+    HashSet<Integer> set = new HashSet();
+    for (int i : a) {set.add(i);}
+    for (int i : b) {set.add(i);}
+
+    Integer[] temp = set.toArray(new Integer[0]);
+    int[] arr = new int[temp.length];
+    for (int i = 0; i < arr.length; i++) {arr[i] = temp[i].intValue();}
+
+    return arr;
+}
+
+4.2 Intersect
+
+import java.util.HashSet;
+public static int[] union(int[] a, int[] b) {
+    HashSet<Integer> setA = new HashSet();
+    HashSet<Integer> setB = new HashSet();
+    for (int i : a) {setA.add(i);}
+    for (int i : b) {setB.add(i);}
+
+    setA.retainAll(setB);
+
+    int[] arr = new int[set.A.size()];
+    int i = 0;
+    for (int item : setA) {
+        arr[i] = item;
+        i++;
+    }
+
+    return arr;
+}
