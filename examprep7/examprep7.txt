@@ -1,0 +1,22 @@
+CS61B Exam Prep 7
+
+1. It Begins
+Theta(N) runtime:       for (int i = 1; i < N; i++) {...}
+Theta(log N) runtime:   for (int i = 1; i < N; i = i * 2) {...}
+Theta(1) runtime:       for (int i = 1; i < N; i = N) {...}
+
+2. Slightly Harder
+f4: Theta(N^2 log n) - N^2 from g(N), log n b/c of recursive f4(N/2) ???
+f5: O(N) - for each digit D of N, runs for loop D times
+        In worst case, D is always 9, loop runs 9 x # digits times which is the same order of magnitude as N
+
+3. More, MORE, MOREEEE
+P1: N^2
+P2: N log N
+P3: N ??
+P4: 1
+P5: N^2 ??
+
+4. A Wild Hilfinger Appears
+a.
+b. N^2
