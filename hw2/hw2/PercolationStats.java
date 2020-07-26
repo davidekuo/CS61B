@@ -16,7 +16,7 @@ public class PercolationStats {
     private int t;
 
     /** Coefficient for 95% confidence interval. */
-    private static final int CI = 1.96;
+    private static final double CI = 1.96;
 
     /** Measure percolation threshold T times.
      *  @param N - dimension of grid
