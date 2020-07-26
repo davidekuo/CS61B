@@ -32,16 +32,11 @@ public class PercolationStats {
         this.t = T;
         percolationThresholds = new double[t];
 
-        double[] uniform = new double[N];
-        for (int i = 0; i < N; i++) {
-            uniform[i] = 1 / N;
-        }
-
         for (int i = 0; i < t; i++) {
             Percolation p = pf.make(N);
             while (!p.percolates()) {
-                int row = StdRandom.discrete(uniform);
-                int col = StdRandom.discrete(uniform);
+                int row = StdRandom.uniform(N);
+                int col = StdRandom.uniform(N);
                 p.open(row, col);
             }
             percolationThresholds[i] = p.numberOfOpenSites() / (N * N * 1.0);
