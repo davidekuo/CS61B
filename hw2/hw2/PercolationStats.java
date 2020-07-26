@@ -37,7 +37,6 @@ public class PercolationStats {
             uniform[i] = 1 / N;
         }
 
-        pf = new PercolationFactory();
         for (int i = 0; i < t; i++) {
             Percolation p = pf.make(N);
             while (!p.percolates()) {
