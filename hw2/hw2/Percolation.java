@@ -2,127 +2,134 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+/**
+ * Percolation data type modeling a percolation system.
+ * @author David Kuo
+ */
 public class Percolation {
 
-    private int N;
+    /** size of percolation system (N x N grid). */
+    private int n;
+
+    /** # of open sites in percolation system. */
     private int numOpenSites;
 
-    private int[][] indexArray; // reference for converting array [row][col] to disjointSet index
+    /** reference for converting array [row][col] to disjointSet index. */
+    private int[][] index;
 
-    private boolean[][] openArray; // tracks which array elements have been opened
-    // Hopefully more memory efficient than adding 3rd dimension to indexArray b/c boolean instead of int
+    /** tracks which array elements have been opened. */
+    private boolean[][] open;
 
-    private WeightedQuickUnionUF fullSet; // disjoint set for tracking whether each element is full
-    private WeightedQuickUnionUF percolateSet; // disjoint set for tracking whether percolation has occurred
+    /** disjoint set for tracking whether each element is full. */
+    private WeightedQuickUnionUF full;
 
-    // create N-by-N grid, with all sites initially blocked
+    /** disjoint set for tracking whether percolation has occurred. */
+    private WeightedQuickUnionUF percolate;
+
+    /**
+     * Create N-by-N grid, with all sites initially blocked.
+     * @param N - size of percolation system (N X N grid) */
     public Percolation(int N) {
         if (N <= 0) {
             throw new java.lang.IllegalArgumentException();
         }
 
-        this.N = N;
+        this.n = N;
         numOpenSites = 0;
 
-        fullSet = new WeightedQuickUnionUF(N * N + 1);
-        // + 1 because index 0 will be a virtual "top" element which we will connect to each element in the top row
-        // indices 1 ... N*N correspond to [row][col] in index array which will be initialized below
-        // this allows us to implement isFull() with connected(index, 0)
+        full = new WeightedQuickUnionUF(N * N + 1);
+        percolate = new WeightedQuickUnionUF(N * N + 2);
 
-        percolateSet = new WeightedQuickUnionUF(N * N + 2);
-        // + 2 because index 0 will be a virtual "top" element to be connected to each open element in the top row
-        // and index N * N + 1 will be a virtual "bottom" element to be connect to each open element in the bottom row
-        // as above, indices 1 ... N*N correspond to [row][col] in index array which will be initialized below
-        // this allows us to implement percolate() with connected(0, N * N + 1)
-
-        // initialize reference array
-        indexArray = new int[N][N];
-        openArray = new boolean[N][N];
-        int index = 1; // start at 1 because index 0 is reserved for virtual "top" element
+        index = new int[N][N];
+        open = new boolean[N][N];
+        int x = 1;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                indexArray[i][j] = index;
-                index += 1;
-                openArray[i][j] = false;
+                this.index[i][j] = x;
+                x += 1;
+                open[i][j] = false;
             }
         }
     }
 
-    // open the site (row, col) if it is not open already
+    /** Open the site (row, col) if it is not open already.
+     *  @param row - row
+     *  @param col - col */
     public void open(int row, int col) {
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (row < 0 || row >= n || col < 0 || col >= n) {
             throw new java.lang.IndexOutOfBoundsException();
         }
 
-        // if element is already open, stop
         if (isOpen(row, col)) {
             return;
         }
 
-        // connect/union new open element with its legal & open neighbors (avoid index out of bounds)
         if (row - 1 >= 0 && isOpen(row - 1, col)) {
-            fullSet.union(indexArray[row][col], indexArray[row - 1][col]);
-            percolateSet.union(indexArray[row][col], indexArray[row - 1][col]);
+            full.union(index[row][col], index[row - 1][col]);
+            percolate.union(index[row][col], index[row - 1][col]);
         }
-        if (row + 1 < N && isOpen(row + 1, col)) {
-            fullSet.union(indexArray[row][col], indexArray[row + 1][col]);
-            percolateSet.union(indexArray[row][col], indexArray[row + 1][col]);
+        if (row + 1 < n && isOpen(row + 1, col)) {
+            full.union(index[row][col], index[row + 1][col]);
+            percolate.union(index[row][col], index[row + 1][col]);
         }
         if (col - 1 >= 0 && isOpen(row, col - 1)) {
-            fullSet.union(indexArray[row][col], indexArray[row][col - 1]);
-            percolateSet.union(indexArray[row][col], indexArray[row][col - 1]);
+            full.union(index[row][col], index[row][col - 1]);
+            percolate.union(index[row][col], index[row][col - 1]);
         }
-        if (col + 1 < N && isOpen(row, col + 1)) {
-            fullSet.union(indexArray[row][col], indexArray[row][col + 1]);
-            percolateSet.union(indexArray[row][col], indexArray[row][col + 1]);
+        if (col + 1 < n && isOpen(row, col + 1)) {
+            full.union(index[row][col], index[row][col + 1]);
+            percolate.union(index[row][col], index[row][col + 1]);
         }
 
-        openArray[row][col] = true;
+        open[row][col] = true;
         numOpenSites += 1;
 
-        // if new open element is in the top row, connect/union to virtual "top" element (index 0)
         if (row == 0) {
-            fullSet.union(indexArray[row][col], 0);
-            percolateSet.union(indexArray[row][col], 0);
+            full.union(index[row][col], 0);
+            percolate.union(index[row][col], 0);
         }
 
-        // if new open element is in the bottom row, connect/union to virtual "bottom" element (index N * N + 1)
-        if (row == N - 1) {
-            percolateSet.union(indexArray[row][col], N * N + 1);
+        if (row == n - 1) {
+            percolate.union(index[row][col], n * n + 1);
         }
     }
 
-    // is the site (row, col) open?
+    /** Is the site (row,col) open?
+     *  @param row - row
+     *  @param col - col
+     *  @return true if open, false if not */
     public boolean isOpen(int row, int col) {
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (row < 0 || row >= n || col < 0 || col >= n) {
             throw new java.lang.IndexOutOfBoundsException();
         }
-        return openArray[row][col];
+        return open[row][col];
     }
 
-    // is the site (row, col) full?
+    /** Is the site (row,col) full?
+     *  @param row - row
+     *  @param col - col
+     *  @return true if open, false if not */
     public boolean isFull(int row, int col) {
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (row < 0 || row >= n || col < 0 || col >= n) {
             throw new java.lang.IndexOutOfBoundsException();
         }
-        // a site is full iff it is connected to one of the top row elements
-        // and by extension, the virtual "top" element (index 0)
-        return fullSet.connected(indexArray[row][col], 0);
+        return full.connected(index[row][col], 0);
     }
 
-    // number of open sites
+    /** Returns # of open sites.
+     *  @return # of open sites */
     public int numberOfOpenSites() {
         return numOpenSites;
     }
 
-    // does the system percolate?
+    /** Does the system percolate?
+     *  @return true if so, false if not */
     public boolean percolates() {
-        // percolation only occurs if a top row element (connected to the virtual "top" element [index 0])
-        // is connected to a bottom row element (connected to the virtual "bottom" element [index N * N + 1])
-        return percolateSet.connected(0, N * N + 1);
+        return percolate.connected(0, n * n + 1);
     }
 
-    // use for unit testing (not required)
+    /** For unit testing, optional.
+     * @param args - command line arguments */
     public static void main(String[] args) {
 
     }
