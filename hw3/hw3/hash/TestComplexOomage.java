@@ -45,7 +45,7 @@ public class TestComplexOomage {
         int N = 10000;
 
         for (int i = 0; i < N; i += 1) {
-            int x = StdRandom.uniform(1,10);
+            int x = StdRandom.uniform(1, 10);
             ArrayList<Integer> params = new ArrayList<>(x);
             for (int j = 0; j < x; j++) {
                 params.add(StdRandom.uniform(0, 51) * 5);
