@@ -110,8 +110,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
 
         if (index > 1) {
             int parent = parentIndex(index);
-            if (contents[parent] != null &&
-                    contents[index].myPriority < contents[parent].myPriority) {
+            if (contents[parent] != null
+                    && contents[index].myPriority < contents[parent].myPriority) {
                 swap(index, parent);
                 swim(parent);
             }
@@ -132,14 +132,14 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         int right = rightIndex(index);
         int minChild;
 
-        if (!inBounds(left) && !inBounds(right)) {
-            return;
-        } else if (inBounds(left) && inBounds(right)) {
+        if (inBounds(left) && inBounds(right)) {
             minChild = min(left, right);
         } else if (inBounds(left) && !inBounds(right)) {
             minChild = left;
-        } else {
+        } else if (!inBounds(left) && inBounds(right)){
             minChild = right;
+        } else {
+            return;
         }
 
         if (contents[index].myPriority > contents[minChild].myPriority) {
@@ -196,11 +196,12 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         }
 
         T min = contents[1].myItem;
-        contents[1] = null;
         swap(1, size);
+        contents[size] = null;
         size = size - 1;
-        sink(1);
-
+        if (size > 1) {
+            sink(1);
+        }
         return min;
     }
 
