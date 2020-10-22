@@ -30,7 +30,6 @@ public class MazeCycles extends MazeExplorer {
 
     @Override
     public void solve() {
-        // TODO: Your code here!
         dfs(s, s);
     }
 
@@ -51,7 +50,7 @@ public class MazeCycles extends MazeExplorer {
                 // If there is an adjacent u that is already visited
                 // AND u is not parent of v
                 // there is a cycle in the graph
-                if(marked[u] && u != parent) {
+                if (marked[u] && u != parent) {
                     cycleDetected = true;
                     cycle = u;
                     edgeTo[u] = v;

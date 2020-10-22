@@ -36,15 +36,15 @@ public class MazeAStarPath extends MazeExplorer {
         /* You do not have to use this method. */
     }
 
-    /** Performs an A star search from vertex s. */
-    private void astar(int s) {
-        edgeTo[s] = s;
-        distTo[s] = 0;
-        marked[s] = true;
+    /** Performs an A star search from vertex v. */
+    private void astar(int v) {
+        edgeTo[v] = v;
+        distTo[v] = 0;
+        marked[v] = true;
         announce();
 
-        for (int i = 0; i < maze.V(); i+=1) {
-            if (i != s) {
+        for (int i = 0; i < maze.V(); i += 1) {
+            if (i != v) {
                 fringe.insert(i, Double.MAX_VALUE);
             } else {
                 fringe.insert(i, 0);

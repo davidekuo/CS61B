@@ -1,9 +1,6 @@
 package lab11.graphs;
 
 import org.junit.Test;
-
-import java.lang.reflect.Array;
-
 import static org.junit.Assert.*;
 
 /**
@@ -138,7 +135,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             minChild = min(left, right);
         } else if (inBounds(left) && !inBounds(right)) {
             minChild = left;
-        } else if (!inBounds(left) && inBounds(right)){
+        } else if (!inBounds(left) && inBounds(right)) {
             minChild = right;
         } else {
             return;
