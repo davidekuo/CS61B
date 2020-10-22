@@ -4,10 +4,17 @@ package lab11.graphs;
  *  @author Josh Hug
  */
 public class MazeAStarPath extends MazeExplorer {
+    /* Inherits public fields:
+    public int[] distTo;
+    public int[] edgeTo;
+    public boolean[] marked;
+    */
     private int s;
     private int t;
     private boolean targetFound = false;
     private Maze maze;
+
+    private ArrayHeap<Integer> fringe = new ArrayHeap<>();
 
     public MazeAStarPath(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
         super(m);
@@ -20,7 +27,7 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Estimate of the distance from v to the target. */
     private int h(int v) {
-        return -1;
+        return Math.abs(maze.toX(v) - maze.toX(t)) + Math.abs(maze.toY(v) - maze.toY(t));
     }
 
     /** Finds vertex estimated to be closest to target. */
@@ -31,13 +38,46 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Performs an A star search from vertex s. */
     private void astar(int s) {
-        // TODO
+        edgeTo[s] = s;
+        distTo[s] = 0;
+        marked[s] = true;
+        announce();
+
+        for (int i = 0; i < maze.V(); i+=1) {
+            if (i != s) {
+                fringe.insert(i, Double.MAX_VALUE);
+            } else {
+                fringe.insert(i, 0);
+            }
+        }
+
+        while (fringe.peek() != null) {
+            int vertex = fringe.removeMin();
+            marked[vertex] = true;
+            announce();
+
+            if (vertex == t) {
+                return;
+            }
+
+            for (int neighbor : maze.adj(vertex)) {
+                int proposedDistToNeighbor = distTo[vertex] + 1;
+                if (proposedDistToNeighbor < distTo[neighbor]) {
+                    edgeTo[neighbor] = vertex;
+                    distTo[neighbor] = proposedDistToNeighbor + 1;
+                    fringe.changePriority(neighbor, h(neighbor));
+                }
+
+            }
+        }
+
     }
 
     @Override
     public void solve() {
         astar(s);
     }
+
 
 }
 
