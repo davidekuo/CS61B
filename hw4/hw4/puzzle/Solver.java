@@ -37,10 +37,10 @@ public class Solver {
         }
     }
 
-    MinPQ<SearchNode> pq = new MinPQ(new SearchNodeComparator());
-    int solutionMoves;
-    ArrayDeque<WorldState> solutionSequence;
-    int totalItemsEnqueued = 0;
+    private MinPQ<SearchNode> pq = new MinPQ(new SearchNodeComparator());
+    private int solutionMoves;
+    private ArrayDeque<WorldState> solutionSequence;
+    private int totalItemsEnqueued = 0;
 
     public Solver(WorldState initial) {
         /* Constructor which solves the puzzle, computing everything necessary for moves()

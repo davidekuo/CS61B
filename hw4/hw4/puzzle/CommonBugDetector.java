@@ -79,9 +79,10 @@ public class CommonBugDetector {
 
         AlphabetEasyPuzzle aep = new AlphabetEasyPuzzle('a');
         Solver s3 = new Solver(aep);
-        // TODO: Print out the number of total things ever enqueued in your MinPQ and compare to the comments.
-        System.out.println("Total # of items enqueued by s3 should be approximately 25, not 50: " + s3.totalItemsEnqueued);
+
+        // Print total # of things ever enqueued in MinPQ and compare to comments:
         // if you print out the total number of items enqueued by s3
-        // it should be approximately 25, not approximately 50.
+        // it should be approximately 25, not approximately 50
+        System.out.println("Total # of items enqueued by s3 (should be 25): " + s3.totalItemsEnqueued);
     }
 }

@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class Board implements WorldState {
 
-    final int BLANK = 0;
-    final int[][] currentBoard;
+    private final int BLANK = 0;
+    private final int[][] currentBoard;
 
     public Board(int[][] tiles) {
         currentBoard = copyBoard(tiles);
@@ -133,12 +133,13 @@ public class Board implements WorldState {
         for (int i = 0; i < size(); i++) {
             for (int j = 0; j < size(); j++) {
                 int tile = currentBoard[i][j];
-                if (i != goalRow(tile) || j != goalCol(tile)) {
-                    hammingDistance++;
+                if (tile != BLANK) {
+                    if (i != goalRow(tile) || j != goalCol(tile)) {
+                        hammingDistance++;
+                    }
                 }
             }
         }
-
         return hammingDistance;
     }
 
@@ -147,12 +148,14 @@ public class Board implements WorldState {
 
         for (int i = 0; i < size(); i++) {
             for (int j = 0; j < size(); j++) {
-                int n = currentBoard[i][j];
-                int additionalError = Math.abs(goalRow(n) - i) + Math.abs(goalCol(n) - j);
-                manhattanDistance += additionalError;
+                int tile = currentBoard[i][j];
+                if (tile != BLANK) {
+                    int additionalError = Math.abs(goalRow(tile) - i) + Math.abs(goalCol(tile) - j);
+                    manhattanDistance += additionalError;
+                }
+
             }
         }
-
         return manhattanDistance;
     }
 
@@ -165,11 +168,19 @@ public class Board implements WorldState {
         if (this == y) {
             return true;
         }
-        if (y == null || getClass() != y.getClass()) {
+        if (y == null) {
+            return false;
+        }
+        if (getClass() != y.getClass()) {
             return false;
         }
 
         Board otherBoard = (Board) y;
+
+        if (otherBoard.size() != this.size()) {
+            return false;
+        }
+
         for (int i = 0; i < otherBoard.size(); i++) {
             for (int j = 0; j < otherBoard.size(); j++) {
                 if (this.currentBoard[i][j] != otherBoard.currentBoard[i][j]) {
@@ -180,13 +191,26 @@ public class Board implements WorldState {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for (int i = 0; i < currentBoard.length; i++) {
+            int product = 1;
+            for (int j = 0; j < currentBoard.length; j++) {
+                product *= currentBoard[i][j];
+            }
+            sum += product;
+        }
+        return sum;
+    }
+
     public String toString() {
         StringBuilder s = new StringBuilder();
         int N = size();
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i , j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
