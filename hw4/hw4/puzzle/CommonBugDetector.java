@@ -83,6 +83,6 @@ public class CommonBugDetector {
         // Print total # of things ever enqueued in MinPQ and compare to comments:
         // if you print out the total number of items enqueued by s3
         // it should be approximately 25, not approximately 50
-        System.out.println("Total # of items enqueued by s3 (should be 25): " + s3.totalItemsEnqueued);
+        // System.out.println(s3.totalItemsEnqueued);
     }
 }
