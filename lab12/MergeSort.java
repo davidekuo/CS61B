@@ -35,7 +35,13 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
         // Your code here!
-        return null;
+        Queue<Queue<Item>> queueOfQueues = new Queue<>();
+        for (Item i : items) {
+            Queue<Item> singleItemQueue = new Queue<>();
+            singleItemQueue.enqueue(i);
+            queueOfQueues.enqueue(singleItemQueue);
+        }
+        return queueOfQueues;
     }
 
     /**
@@ -54,13 +60,60 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
         // Your code here!
-        return null;
+        Queue<Item> mergedQueue = new Queue<>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            mergedQueue.enqueue(getMin(q1, q2));
+        }
+        return mergedQueue;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
-        return items;
+
+        // divide
+        if (items.size() <= 1) {
+            return items; // if only 1 element, already sorted
+        } else {
+            // split in half
+            Queue<Item> unsorted1 = new Queue<>();
+            Queue<Item> unsorted2 = new Queue<>();
+            for (int i = 0; i < items.size() / 2; i++) {
+                unsorted1.enqueue(items.dequeue());
+            }
+            while (!items.isEmpty()) {
+                unsorted2.enqueue(items.dequeue());
+            }
+            // sort each half
+            Queue<Item> sorted1 = mergeSort(unsorted1);
+            Queue<Item> sorted2 = mergeSort(unsorted2);
+            // merge sorted Queues
+            Queue<Item> sorted = mergeSortedQueues(sorted1, sorted2);
+            // return sorted Queue
+            return sorted;
+        }
+    }
+
+    public static void main(String[] args) {
+        Queue<String> apples = new Queue<String>();
+        apples.enqueue("Fuji");
+        apples.enqueue("Gala");
+        apples.enqueue("Honey_crisp");
+        apples.enqueue("Cosmic_crisp");
+        apples.enqueue("Pink_lady");
+        apples.enqueue("Envy");
+
+        System.out.print("Before sort: ");
+        for (String s : apples) {
+            System.out.print(s + " ");
+        }
+
+        Queue<String> sortedApples = MergeSort.mergeSort(apples);
+
+        System.out.print("\nAfter  sort: ");
+        for (String s : sortedApples) {
+            System.out.print(s + " ");
+        }
     }
 }

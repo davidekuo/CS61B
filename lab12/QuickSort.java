@@ -48,12 +48,56 @@ public class QuickSort {
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
         // Your code here!
+        for (Item i : unsorted) {
+            if (i.compareTo(pivot) < 0) {
+                less.enqueue(i);
+            } else if (i.compareTo(pivot) > 0) {
+                greater.enqueue(i);
+            } else {
+                equal.enqueue(i);
+            }
+        }
+
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
         // Your code here!
-        return items;
+        if (items.isEmpty() || items.size() == 1) {
+            return items;
+        } else {
+            Item pivot = getRandomItem(items);
+            Queue<Item> less = new Queue<>();
+            Queue<Item> equal = new Queue<>();
+            Queue<Item> greater = new Queue<>();
+            partition(items, pivot, less, equal, greater);
+            Queue<Item> sortedLess = quickSort(less);
+            Queue<Item> sortedGreater = quickSort(greater);
+            Queue<Item> sortedQueue = catenate(catenate(sortedLess, equal), sortedGreater);
+            return sortedQueue;
+        }
+    }
+
+    public static void main(String[] args) {
+        Queue<String> apples = new Queue<String>();
+        apples.enqueue("Fuji");
+        apples.enqueue("Gala");
+        apples.enqueue("Honey_crisp");
+        apples.enqueue("Cosmic_crisp");
+        apples.enqueue("Pink_lady");
+        apples.enqueue("Envy");
+
+        System.out.print("Before sort: ");
+        for (String s : apples) {
+            System.out.print(s + " ");
+        }
+
+        Queue<String> sortedApples = QuickSort.quickSort(apples);
+
+        System.out.print("\nAfter  sort: ");
+        for (String s : sortedApples) {
+            System.out.print(s + " ");
+        }
     }
 }
