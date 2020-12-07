@@ -79,11 +79,14 @@ public class MergeSort {
             // split in half
             Queue<Item> unsorted1 = new Queue<>();
             Queue<Item> unsorted2 = new Queue<>();
-            for (int i = 0; i < items.size() / 2; i++) {
-                unsorted1.enqueue(items.dequeue());
-            }
-            while (!items.isEmpty()) {
-                unsorted2.enqueue(items.dequeue());
+            boolean bool = true;
+            for (Item i : items) {
+                if (bool) {
+                    unsorted1.enqueue(i);
+                } else {
+                    unsorted2.enqueue(i);
+                }
+                bool = !bool;
             }
             // sort each half
             Queue<Item> sorted1 = mergeSort(unsorted1);
