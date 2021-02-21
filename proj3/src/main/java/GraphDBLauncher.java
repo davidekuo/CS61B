@@ -8,9 +8,10 @@ import java.util.ArrayList;
  */
 public class GraphDBLauncher {
     private static final String OSM_DB_PATH = "../library-sp18/data/berkeley-2018.osm.xml";
+    private static final String OSM_DB_PATH_TINY = "../library-sp18/data/tiny-clean.osm.xml";
 
     public static void main(String[] args) {
-        GraphDB g = new GraphDB(OSM_DB_PATH);
+        GraphDB g = new GraphDB(OSM_DB_PATH_TINY);
 
         Iterable<Long> verticesIterable = g.vertices();
 

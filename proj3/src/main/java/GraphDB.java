@@ -7,6 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -20,6 +22,24 @@ import java.util.ArrayList;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
+
+    private class Node {
+        private long id;
+        private double lat;
+        private double lon;
+
+        public Node(long id, double lon, double lat) {
+            this.id = id;
+            this.lon = lon;
+            this.lat = lat;
+        }
+    }
+
+    HashMap<Long, ArrayList<Long>> adjacentMap = new HashMap<>();
+    // key = node id, value = ArrayList of adjacent node indices
+
+    HashMap<Long, Node> nodeIDMap = new HashMap<>();
+    // key = node id, value = Node object (contains id, latitude, longitude)
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -42,8 +62,20 @@ public class GraphDB {
         clean();
     }
 
+    void addNode(long id, double lon, double lat) {
+        adjacentMap.put(id, new ArrayList<Long>());
+        nodeIDMap.put(id, new Node(id, lon, lat));
+    }
+
+    void addEdge(long node1, long node2) {
+        adjacentMap.get(node1).add(node2);
+        adjacentMap.get(node2).add(node1);
+    }
+
     /**
      * Helper to process strings into their "cleaned" form, ignoring punctuation and capitalization.
+     * by replacing any character that is not an upper or lower case letter or space with ""
+     * and converting the remaining letters all to lower case
      * @param s Input string.
      * @return Cleaned string.
      */
@@ -58,6 +90,18 @@ public class GraphDB {
      */
     private void clean() {
         // TODO: Your code here.
+        ArrayList<Long> keysToRemove = new ArrayList<>();
+
+        for (Map.Entry<Long, ArrayList<Long>> e : adjacentMap.entrySet()) {
+            if (e.getValue().isEmpty()) {
+                keysToRemove.add(e.getKey());
+            }
+        }
+
+        for (Long k : keysToRemove) {
+            adjacentMap.remove(k);
+            nodeIDMap.remove(k);
+        }
     }
 
     /**
@@ -66,7 +110,7 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return nodeIDMap.keySet(); // returns keys of nodeIDMap as a Set<Long>
     }
 
     /**
@@ -75,7 +119,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return adjacentMap.get(v);
     }
 
     /**
@@ -136,7 +180,18 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long closestNode = -1;
+        double closestDistance = -1;
+
+        for (Map.Entry<Long,Node> e : nodeIDMap.entrySet()){
+            double d = distance(lon, lat, e.getValue().lon, e.getValue().lat);
+            if (closestNode == -1 || d < closestDistance) {
+                closestNode = e.getKey();
+                closestDistance = d;
+            }
+        }
+
+        return closestNode;
     }
 
     /**
@@ -145,7 +200,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodeIDMap.get(v).lon;
     }
 
     /**
@@ -154,6 +209,7 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodeIDMap.get(v).lat;
     }
+
 }
