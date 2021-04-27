@@ -60,11 +60,12 @@ public class MazeAStarPath extends MazeExplorer {
                 return;
             }
 
+            /* Relax all edges pointing from vertex */
             for (int neighbor : maze.adj(vertex)) {
                 int proposedDistToNeighbor = distTo[vertex] + 1;
                 if (proposedDistToNeighbor < distTo[neighbor]) {
                     edgeTo[neighbor] = vertex;
-                    distTo[neighbor] = proposedDistToNeighbor + 1;
+                    distTo[neighbor] = proposedDistToNeighbor;
                     fringe.changePriority(neighbor, h(neighbor));
                 }
 
