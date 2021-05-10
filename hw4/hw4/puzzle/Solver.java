@@ -32,7 +32,7 @@ public class Solver {
             } else if (h1 > h2) {
                 return 1;
             } else {
-                return 0;
+                return 0;+18083923932
             }
         }
     }
@@ -63,15 +63,13 @@ public class Solver {
                 break;
             } else {
                 for (WorldState neighbor : currentNode.state.neighbors()) {
-                    if (!neighbor.equals(currentNode.state)) {
-                        if (currentNode.prev == null) {
-                            pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
-                            totalItemsEnqueued++;
+                    if (currentNode.prev == null) {
+                        pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
+                        totalItemsEnqueued++;
 
-                        } else if (!neighbor.equals(currentNode.prev.state)) {
-                            pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
-                            totalItemsEnqueued++;
-                        }
+                    } else if (!neighbor.equals(currentNode.prev.state)) {
+                        pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
+                        totalItemsEnqueued++;
                     }
                 }
             }
