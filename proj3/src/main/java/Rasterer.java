@@ -113,7 +113,8 @@ public class Rasterer {
         return results;
     }
 
-    public String[][] renderGrid(int depth, int ul_tile_X, int ul_tile_Y, int lr_tile_X, int lr_tile_Y) {
+    public String[][] renderGrid(int depth, int ul_tile_X, int ul_tile_Y,
+                                 int lr_tile_X, int lr_tile_Y) {
         /*
         Example from project specification
 
@@ -387,15 +388,15 @@ public class Rasterer {
         testTwelveImages_params.put("h", 566.0);
 
         Map<String, Object> testTwelveImages_results = r.getMapRaster(testTwelveImages_params);
-        System.out.println("Expect: {" +
-                "raster_ul_lon=-122.2998046875, depth=2, raster_lr_lon=-122.2119140625, " +
-                "raster_lr_lat=37.82280243352756, raster_ul_lat=37.87484726881516, " +
-                "query_success=true,  \n" +
-                "render_grid=[\n" +
-                "[d2_x0_y1.png, d2_x1_y1.png, d2_x2_y1.png, d2_x3_y1.png], \n" +
-                "[d2_x0_y2.png, d2_x1_y2.png, d2_x2_y2.png, d2_x3_y2.png], \n" +
-                "[d2_x0_y3.png, d2_x1_y3.png, d2_x2_y3.png, d2_x3_y3.png] \n" +
-                "]}");
+        System.out.println("Expect: {"
+                + "raster_ul_lon=-122.2998046875, depth=2, raster_lr_lon=-122.2119140625, "
+                + "raster_lr_lat=37.82280243352756, raster_ul_lat=37.87484726881516, "
+                + "query_success=true,  \n"
+                + "render_grid=[\n"
+                + "[d2_x0_y1.png, d2_x1_y1.png, d2_x2_y1.png, d2_x3_y1.png], \n"
+                + "[d2_x0_y2.png, d2_x1_y2.png, d2_x2_y2.png, d2_x3_y2.png], \n"
+                + "[d2_x0_y3.png, d2_x1_y3.png, d2_x2_y3.png, d2_x3_y3.png] \n"
+                + "]}");
         System.out.println("Actual: " + testTwelveImages_results);
         // passed!
 
@@ -408,12 +409,12 @@ public class Rasterer {
         test_params.put("w", 892.0);
         test_params.put("h", 875.0);
         Map<String, Object> test_results = r.getMapRaster(test_params);
-        System.out.println("Expect: {raster_ul_lon=-122.24212646484375, depth=7, " +
-                "raster_lr_lon=-122.24006652832031, raster_lr_lat=37.87538940251607, " +
-                "raster_ul_lat=37.87701580361881, query_success=true, " +
-                "render_grid=[[d7_x84_y28.png, d7_x85_y28.png, d7_x86_y28.png], " +
-                "[d7_x84_y29.png, d7_x85_y29.png, d7_x86_y29.png], " +
-                "[d7_x84_y30.png, d7_x85_y30.png, d7_x86_y30.png]]}");
+        System.out.println("Expect: {raster_ul_lon=-122.24212646484375, depth=7, "
+                + "raster_lr_lon=-122.24006652832031, raster_lr_lat=37.87538940251607, "
+                + "raster_ul_lat=37.87701580361881, query_success=true, "
+                + "render_grid=[[d7_x84_y28.png, d7_x85_y28.png, d7_x86_y28.png], "
+                + "[d7_x84_y29.png, d7_x85_y29.png, d7_x86_y29.png], "
+                + "[d7_x84_y30.png, d7_x85_y30.png, d7_x86_y30.png]]}");
         System.out.println("Actual: " + test_results);
         // passed!
     }

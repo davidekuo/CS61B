@@ -1,5 +1,8 @@
 import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +28,46 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long sourceNode = g.closest(stlon, stlat);
+        long goalNode = g.closest(destlon, destlat);
+
+        ArrayHeap<Long> fringe = new ArrayHeap<>();
+        fringe.insert(sourceNode, 0);
+
+        HashMap<Long, Double> distTo = new HashMap<>();
+        HashMap<Long, Long> edgeTo = new HashMap<>();
+        distTo.put(sourceNode, 0.0);
+        edgeTo.put(sourceNode, (long) 0.0);
+
+        while (fringe.size() > 0) {
+            long vertex = fringe.removeMin();
+            if (vertex == goalNode) {
+                break;
+            } else {
+                double distToVertex = distTo.get(vertex);
+                for (long neighbor : g.adjacent(vertex)) {
+                    if (edgeTo.get(vertex) != neighbor) {
+                        double proposedDistToNeighbor = distToVertex + g.distance(vertex, neighbor);
+                        if (!distTo.containsKey(neighbor)
+                                || distTo.get(neighbor) > proposedDistToNeighbor) {
+                            distTo.put(neighbor, proposedDistToNeighbor);
+                            edgeTo.put(neighbor, vertex);
+                            fringe.insert(neighbor,
+                                    proposedDistToNeighbor + g.distance(neighbor, goalNode));
+                        }
+                    }
+                }
+            }
+        }
+
+        List<Long> solution = new ArrayList<>();
+        long pointer = goalNode;
+        while (pointer != (long) 0.0) {
+            solution.add(pointer);
+            pointer = edgeTo.get(pointer);
+        }
+        Collections.reverse(solution);
+        return solution;
     }
 
     /**

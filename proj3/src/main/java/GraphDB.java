@@ -28,7 +28,7 @@ public class GraphDB {
         private double lat;
         private double lon;
 
-        public Node(long id, double lon, double lat) {
+        Node(long id, double lon, double lat) {
             this.id = id;
             this.lon = lon;
             this.lat = lat;
@@ -89,7 +89,6 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
         ArrayList<Long> keysToRemove = new ArrayList<>();
 
         for (Map.Entry<Long, ArrayList<Long>> e : adjacentMap.entrySet()) {
@@ -183,7 +182,7 @@ public class GraphDB {
         long closestNode = -1;
         double closestDistance = -1;
 
-        for (Map.Entry<Long,Node> e : nodeIDMap.entrySet()){
+        for (Map.Entry<Long, Node> e : nodeIDMap.entrySet()) {
             double d = distance(lon, lat, e.getValue().lon, e.getValue().lat);
             if (closestNode == -1 || d < closestDistance) {
                 closestNode = e.getKey();
