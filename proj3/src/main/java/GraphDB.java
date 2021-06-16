@@ -8,6 +8,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -23,15 +24,17 @@ public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
-    private class Node {
+    public class Node {
         private long id;
         private double lat;
         private double lon;
+        protected HashSet<String> ways;
 
         Node(long id, double lon, double lat) {
             this.id = id;
             this.lon = lon;
             this.lat = lat;
+            ways = new HashSet<>();
         }
     }
 
@@ -39,7 +42,7 @@ public class GraphDB {
     // key = node id, value = ArrayList of adjacent node indices
 
     HashMap<Long, Node> nodeIDMap = new HashMap<>();
-    // key = node id, value = Node object (contains id, latitude, longitude)
+    // key = node id, value = Node object (contains id, latitude, longitude, ways)
 
     /**
      * Example constructor shows how to create and start an XML parser.

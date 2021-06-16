@@ -81,40 +81,40 @@ public class Rasterer {
         int depth = correctDepthForQuery(params);
         System.out.println("depth: " + depth);
 
-        int ul_tile_X = tileX(depth, params.get("ullon"), false);
-        int ul_tile_Y = tileY(depth, params.get("ullat"), false);
-        System.out.println("UL: X = " + ul_tile_X + ", Y = " + ul_tile_Y);
+        int ulTileX = tileX(depth, params.get("ullon"), false);
+        int ulTileY = tileY(depth, params.get("ullat"), false);
+        System.out.println("UL: X = " + ulTileX + ", Y = " + ulTileY);
 
-        int lr_tile_X = tileX(depth, params.get("lrlon"), true);
-        int lr_tile_Y = tileY(depth, params.get("lrlat"), true);
-        System.out.println("LR: X = " + lr_tile_X + ", Y = " + lr_tile_Y);
+        int lrTileX = tileX(depth, params.get("lrlon"), true);
+        int lrTileY = tileY(depth, params.get("lrlat"), true);
+        System.out.println("LR: X = " + lrTileX + ", Y = " + lrTileY);
 
-        String[][] render_grid = renderGrid(depth, ul_tile_X, ul_tile_Y, lr_tile_X, lr_tile_Y);
+        String[][] rendergrid = renderGrid(depth, ulTileX, ulTileY, lrTileX, lrTileY);
 
-        double raster_ul_lon = tile_ul_lon(depth, ul_tile_X);
-        double raster_ul_lat = tile_ul_lat(depth, ul_tile_Y);
-        double raster_lr_lon = tile_lr_lon(depth, lr_tile_X);
-        double raster_lr_lat = tile_lr_lat(depth, lr_tile_Y);
+        double rasterULlon = tileULlon(depth, ulTileX);
+        double rasterULlat = tileULlat(depth, ulTileY);
+        double rasterLRlon = tileLRlon(depth, lrTileX);
+        double rasterLRlat = tileLRlat(depth, lrTileY);
         // Edge cases where query longitude or latitude is off map
         // addressed in tile_X and tile_Y functions
 
-        boolean query_success = querySuccessful(params);
+        boolean querySuccess = querySuccessful(params);
 
-        results.put("render_grid", render_grid);
-        results.put("raster_ul_lon", raster_ul_lon);
-        results.put("raster_ul_lat", raster_ul_lat);
-        results.put("raster_lr_lon", raster_lr_lon);
-        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("render_grid", rendergrid);
+        results.put("raster_ul_lon", rasterULlon);
+        results.put("raster_ul_lat", rasterULlat);
+        results.put("raster_lr_lon", rasterLRlon);
+        results.put("raster_lr_lat", rasterLRlat);
         results.put("depth", depth);
-        results.put("query_success", query_success);
+        results.put("query_success", querySuccess);
 
         System.out.println("End Debug getMapRaster()\n");
 
         return results;
     }
 
-    public String[][] renderGrid(int depth, int ul_tile_X, int ul_tile_Y,
-                                 int lr_tile_X, int lr_tile_Y) {
+    public String[][] renderGrid(int depth, int ulTileX, int ulTileY,
+                                 int lrTileX, int lrTileY) {
         /*
         Example from project specification
 
@@ -141,18 +141,18 @@ public class Rasterer {
          */
         System.out.println("\nDebug renderGrid:");
 
-        int X_size = Math.abs(lr_tile_X - ul_tile_X + 1);
-        System.out.println("X_size: " + X_size + " ul_X: " + ul_tile_X + " lr_X: " + lr_tile_X);
+        int xSize = Math.abs(lrTileX - ulTileX + 1);
+        System.out.println("X_size: " + xSize + " ul_X: " + ulTileX + " lr_X: " + lrTileX);
 
-        int Y_size = Math.abs(lr_tile_Y - ul_tile_Y + 1);
-        System.out.println("Y_size: " + Y_size + " ul_Y: " + ul_tile_Y + " lr_Y: " + lr_tile_Y);
+        int ySize = Math.abs(lrTileY - ulTileY + 1);
+        System.out.println("Y_size: " + ySize + " ul_Y: " + ulTileY + " lr_Y: " + lrTileY);
 
-        String[][] grid = new String[Y_size][X_size];
+        String[][] grid = new String[ySize][xSize];
 
-        for (int i = 0; i < Y_size; i++) {
-            for (int j = 0; j < X_size; j++) {
-                int Y = ul_tile_Y + i;
-                int X = ul_tile_X + j;
+        for (int i = 0; i < ySize; i++) {
+            for (int j = 0; j < xSize; j++) {
+                int Y = ulTileY + i;
+                int X = ulTileX + j;
                 grid[i][j] = "d" + depth + "_x" + X + "_y" + Y + ".png";
                 System.out.print(grid[i][j] + " ");
             }
@@ -253,11 +253,11 @@ public class Rasterer {
      *               for displaying the geographic area
      * @return  longitudinal distance per pixel of the query box
      */
-    public double query_lonDPP(Map<String, Double> params) {
+    public double queryLonDPP(Map<String, Double> params) {
         // params: double lrlon, double ullon, double lrlat, double ullat, double w
-        double query_longDist = params.get("lrlon") - params.get("ullon");
-        double query_pixelWidth = params.get("w");
-        return query_longDist / query_pixelWidth;
+        double queryLongDist = params.get("lrlon") - params.get("ullon");
+        double queryPixelWidth = params.get("w");
+        return queryLongDist / queryPixelWidth;
     }
 
     /**
@@ -271,7 +271,7 @@ public class Rasterer {
      *          Must be <= the longitudinal distance per pixel of the query box
      */
     public int correctDepthForQuery(Map<String, Double> params) {
-        double queryLonDPP = query_lonDPP(params);
+        double queryLonDPP = queryLonDPP(params);
 
         for (int i = 0; i < lonDPPatDepth.length; i++) {
             if (lonDPPatDepth[i] <= queryLonDPP) {
@@ -303,7 +303,7 @@ public class Rasterer {
         double ldpt = longDistPerTileAtDepth(depth);
 
         if (isLowerRight) {
-            return (int) (Math.ceil(Math.abs(longitude - ROOT_ULLON) / ldpt) -1);
+            return (int) (Math.ceil(Math.abs(longitude - ROOT_ULLON) / ldpt) - 1);
         } else {
             return (int) (Math.floor(Math.abs(longitude - ROOT_ULLON) / ldpt));
         }
@@ -327,33 +327,33 @@ public class Rasterer {
         double ldpt = latDistPerTileAtDepth(depth);
 
         if (isLowerRight) {
-            return (int) (Math.ceil(Math.abs(ROOT_ULLAT - latitude) / ldpt) -1);
+            return (int) (Math.ceil(Math.abs(ROOT_ULLAT - latitude) / ldpt) - 1);
         } else {
             return (int) (Math.floor(Math.abs(ROOT_ULLAT - latitude) / ldpt));
         }
     }
 
-    public static double tile_ul_lon(int depth, int X) {
+    public static double tileULlon(int depth, int X) {
         return ROOT_ULLON + longDistPerTileAtDepth(depth) * X;
     }
 
-    public static double tile_ul_lat(int depth, int Y) {
+    public static double tileULlat(int depth, int Y) {
         return ROOT_ULLAT - latDistPerTileAtDepth(depth) * Y;
     }
 
-    public static double tile_lr_lon(int depth, int X) {
+    public static double tileLRlon(int depth, int X) {
         return ROOT_ULLON + longDistPerTileAtDepth(depth) * (X + 1);
     }
 
-    public static double tile_lr_lat(int depth, int Y) {
+    public static double tileLRlat(int depth, int Y) {
         return ROOT_ULLAT - latDistPerTileAtDepth(depth) * (Y + 1);
     }
 
     public static void testTileCalcs(int depth, int X, int Y) {
-        System.out.println("tile_ul_lon: " + tile_ul_lon(depth, X));
-        System.out.println("tile_ul_lat: " + tile_ul_lat(depth, Y));
-        System.out.println("tile_lr_lon: " + tile_lr_lon(depth, X));
-        System.out.println("tile_lr_lat: " + tile_lr_lat(depth, Y));
+        System.out.println("tile_ul_lon: " + tileULlon(depth, X));
+        System.out.println("tile_ul_lat: " + tileULlat(depth, Y));
+        System.out.println("tile_lr_lon: " + tileLRlon(depth, X));
+        System.out.println("tile_lr_lat: " + tileLRlat(depth, Y));
     }
 
 
@@ -379,15 +379,15 @@ public class Rasterer {
 
         Rasterer r = new Rasterer();
 
-        Map<String, Double> testTwelveImages_params = new HashMap<>();
-        testTwelveImages_params.put("lrlon", -122.2104604264636);
-        testTwelveImages_params.put("lrlat", 37.8318576119893);
-        testTwelveImages_params.put("ullon", -122.30410170759153);
-        testTwelveImages_params.put("ullat", 37.870213571328854);
-        testTwelveImages_params.put("w", 1091.0);
-        testTwelveImages_params.put("h", 566.0);
+        Map<String, Double> testTwelveImagesParams = new HashMap<>();
+        testTwelveImagesParams.put("lrlon", -122.2104604264636);
+        testTwelveImagesParams.put("lrlat", 37.8318576119893);
+        testTwelveImagesParams.put("ullon", -122.30410170759153);
+        testTwelveImagesParams.put("ullat", 37.870213571328854);
+        testTwelveImagesParams.put("w", 1091.0);
+        testTwelveImagesParams.put("h", 566.0);
 
-        Map<String, Object> testTwelveImages_results = r.getMapRaster(testTwelveImages_params);
+        Map<String, Object> testTwelveImagesResults = r.getMapRaster(testTwelveImagesParams);
         System.out.println("Expect: {"
                 + "raster_ul_lon=-122.2998046875, depth=2, raster_lr_lon=-122.2119140625, "
                 + "raster_lr_lat=37.82280243352756, raster_ul_lat=37.87484726881516, "
@@ -397,25 +397,25 @@ public class Rasterer {
                 + "[d2_x0_y2.png, d2_x1_y2.png, d2_x2_y2.png, d2_x3_y2.png], \n"
                 + "[d2_x0_y3.png, d2_x1_y3.png, d2_x2_y3.png, d2_x3_y3.png] \n"
                 + "]}");
-        System.out.println("Actual: " + testTwelveImages_results);
+        System.out.println("Actual: " + testTwelveImagesResults);
         // passed!
 
         System.out.println("Testing test.html:");
-        Map<String, Double> test_params = new HashMap<>();
-        test_params.put("lrlon", -122.24053369025242);
-        test_params.put("lrlat", 37.87548268822065);
-        test_params.put("ullon", -122.24163047377972);
-        test_params.put("ullat", 37.87655856892288);
-        test_params.put("w", 892.0);
-        test_params.put("h", 875.0);
-        Map<String, Object> test_results = r.getMapRaster(test_params);
+        Map<String, Double> testParams = new HashMap<>();
+        testParams.put("lrlon", -122.24053369025242);
+        testParams.put("lrlat", 37.87548268822065);
+        testParams.put("ullon", -122.24163047377972);
+        testParams.put("ullat", 37.87655856892288);
+        testParams.put("w", 892.0);
+        testParams.put("h", 875.0);
+        Map<String, Object> testResults = r.getMapRaster(testParams);
         System.out.println("Expect: {raster_ul_lon=-122.24212646484375, depth=7, "
                 + "raster_lr_lon=-122.24006652832031, raster_lr_lat=37.87538940251607, "
                 + "raster_ul_lat=37.87701580361881, query_success=true, "
                 + "render_grid=[[d7_x84_y28.png, d7_x85_y28.png, d7_x86_y28.png], "
                 + "[d7_x84_y29.png, d7_x85_y29.png, d7_x86_y29.png], "
                 + "[d7_x84_y30.png, d7_x85_y30.png, d7_x86_y30.png]]}");
-        System.out.println("Actual: " + test_results);
+        System.out.println("Actual: " + testResults);
         // passed!
     }
 }

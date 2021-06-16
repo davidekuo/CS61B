@@ -41,6 +41,7 @@ public class GraphBuildingHandler extends DefaultHandler {
     private final GraphDB g;
 
     private ArrayList<Long> possibleWay;
+    private String possibleWayName;
     private boolean wayIsValid;
 
     /**
@@ -110,7 +111,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                // System.out.println("Max Speed: " + v);
+                System.out.println("Max Speed: " + v);
                 /* TODO set the max speed of the "current way" here. */
             } else if (k.equals("highway")) {
                 // System.out.println("Highway type: " + v);
@@ -121,6 +122,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                 }
             } else if (k.equals("name")) {
                 // System.out.println("Way Name: " + v);
+                possibleWayName = v;
             }
             // System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
@@ -130,7 +132,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             /* Hint: Since we found this <tag...> INSIDE a node, we should probably remember which
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
-            // System.out.println("Node's name: " + attributes.getValue("v"));
+            System.out.println("Node's name: " + attributes.getValue("v"));
         }
     }
 
@@ -154,11 +156,14 @@ public class GraphBuildingHandler extends DefaultHandler {
             // System.out.println("Finishing a way...");
 
             if (wayIsValid) {
-                for (int i = 0; i < possibleWay.size()-1; i++) {
-                    g.addEdge(possibleWay.get(i), possibleWay.get(i+1));
+                for (int i = 1; i < possibleWay.size(); i++) {
+                    g.addEdge(possibleWay.get(i - 1), possibleWay.get(i));
+                    GraphDB.Node node = g.nodeIDMap.get(possibleWay.get(i));
+                    node.ways.add(possibleWayName);
                 }
+                g.nodeIDMap.get(possibleWay.get(0)).ways.add(possibleWayName);
             }
-            // TODO: check edge cases for empty way or 1 element way?
+            // check edge cases for empty way or 1 element way?
         }
     }
 
