@@ -62,7 +62,7 @@ public class Router {
 
         List<Long> solution = new ArrayList<>();
         long pointer = goalNode;
-        while (pointer != (long) 0.0) {
+        while (edgeTo.containsKey(pointer)) {
             solution.add(pointer);
             pointer = edgeTo.get(pointer);
         }
