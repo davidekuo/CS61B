@@ -32,7 +32,7 @@ public class Solver {
             } else if (h1 > h2) {
                 return 1;
             } else {
-                return 0;+18083923932
+                return 0;
             }
         }
     }
@@ -67,7 +67,7 @@ public class Solver {
                         pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
                         totalItemsEnqueued++;
 
-                    } else if (!neighbor.equals(currentNode.prev.state)) {
+                    } else if (!neighbor.equals(currentNode.prev.state)) /* critical optimization */ {
                         pq.insert(new SearchNode(neighbor, currentNode.moves + 1, currentNode));
                         totalItemsEnqueued++;
                     }
