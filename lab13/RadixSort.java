@@ -4,6 +4,9 @@
  * @author Akhil Batra, Alexander Hwang
  *
  */
+
+import java.util.ArrayDeque;
+
 public class RadixSort {
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
@@ -16,8 +19,32 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+
+        String[] sorted = asciis.clone();
+
+        // find longest string length
+        int maxStringLength = 0;
+        for (String s : asciis) {
+            int stringLength = s.length();
+            if (stringLength > maxStringLength) {
+                maxStringLength = stringLength;
+            }
+        }
+
+        for (int d = maxStringLength - 1; d >= 0; d--) {
+            sortHelperLSDBucket(sorted, d);
+        }
+
+        return sorted;
+    }
+
+    private static int findIndex(String s, int index) {
+        int stringLastIndex = s.length() - 1;
+        if (stringLastIndex < index) {
+            return 0;
+        } else {
+            return (int) s.charAt(index);
+        }
     }
 
     /**
@@ -28,7 +55,58 @@ public class RadixSort {
      */
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
-        return;
+        // Using traditional counting sort
+
+        // gather counts for each ASCII character
+        int[] counts = new int[256];
+        for (int i = 0; i < asciis.length; i++) {
+            counts[findIndex(asciis[i], index)]++;
+        }
+
+        /* based on counts, calculate starting position
+            for strings corresponding to each character */
+        int[] starts = new int[256];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i++) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+
+        String[] sorted = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++) {
+            int asciiIndex = findIndex(asciis[i], index);
+            int insertLocation = starts[asciiIndex];
+            sorted[insertLocation] = asciis[i];
+            starts[asciiIndex]++;
+        }
+
+        for (int i = 0; i < sorted.length; i++) {
+            asciis[i] = sorted[i];
+        }
+    }
+
+    private static void sortHelperLSDBucket(String[] asciis, int index) {
+        // Optional LSD helper method for required LSD radix sort
+        // Using bucket sort
+
+        ArrayDeque<String>[] bins = new ArrayDeque[256];
+
+        for (int i = 0; i < bins.length; i++) {
+            bins[i] = new ArrayDeque<>();
+        }
+
+        for (int i = 0; i < asciis.length; i++) {
+            int asciiIndex = findIndex(asciis[i], index);
+            bins[asciiIndex].add(asciis[i]);
+        }
+
+        int ptr = 0;
+        for (int i = 0; i < bins.length; i++) {
+            while (!bins[i].isEmpty()) {
+                asciis[ptr] = bins[i].remove();
+                ptr++;
+            }
+        }
     }
 
     /**
@@ -44,5 +122,20 @@ public class RadixSort {
     private static void sortHelperMSD(String[] asciis, int start, int end, int index) {
         // Optional MSD helper method for optional MSD radix sort
         return;
+    }
+
+    public static void main(String[] args) {
+        String[] unsorted = {"oh", "for", "a", "thousand", "tongues", "to", "sing"};
+        String[] sorted = sort(unsorted);
+
+        for (int i = 0; i < unsorted.length; i++) {
+            System.out.print(unsorted[i] + " ");
+        }
+
+        System.out.println("");
+
+        for (int i = 0; i < sorted.length; i++) {
+            System.out.print(sorted[i] + " ");
+        }
     }
 }
