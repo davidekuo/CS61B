@@ -10,7 +10,7 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        return pic;
+        return new Picture(pic);
     }
 
     // width of current picture
@@ -30,17 +30,15 @@ public class SeamCarver {
     if either x or y is outside its prescribed range. */
 
     public  double energy(int x, int y) {
-        int width = pic.width();
-        int height = pic.height();
+        int width = width();
+        int height = height();
 
         if (x < 0 || x >= width
             || y < 0 || y >= height) {
-            throw new java.lang.IndexOutOfBoundsException();
+            throw new java.lang.IndexOutOfBoundsException("x: " +
+                    + x + " y: " + y + " width:" + width +
+                    " height: " + height);
         }
-
-        // int r = (rgb >> 16) & 0xFF
-        // int g = (rgb >>  8) & 0xFF
-        // int b = (rgb >>  0) & 0xFF
 
         double gradXSquared, dRx, dGx, dBx;
         int leftIndex, rightIndex;
