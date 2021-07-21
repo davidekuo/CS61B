@@ -42,61 +42,52 @@ public class SeamCarver {
         // int g = (rgb >>  8) & 0xFF
         // int b = (rgb >>  0) & 0xFF
 
-        double gradXSquared, dRxSquared, dGxSquared, dBxSquared;
+        double gradXSquared, dRx, dGx, dBx;
+        int leftIndex, rightIndex;
         if (x == 0) {
             // wrap around to right edge (col width - 1)
-            dRxSquared = Math.pow(((pic.getRGB(width - 1, y) >> 16) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 16) & 0xFF), 2);
-            dGxSquared = Math.pow(((pic.getRGB(width - 1, y) >> 8) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 8) & 0xFF), 2);
-            dBxSquared = Math.pow(((pic.getRGB(width - 1, y) >> 0) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 0) & 0xFF), 2);
+            leftIndex = width - 1;
+            rightIndex = x + 1;
         } else if (x == width - 1) {
             // wrap around to left edge (col 0)
-            dRxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 16) & 0xFF)
-                    - ((pic.getRGB(0, y) >> 16) & 0xFF), 2);
-            dGxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 8) & 0xFF)
-                    - ((pic.getRGB(0, y) >> 8) & 0xFF), 2);
-            dBxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 0) & 0xFF)
-                    - ((pic.getRGB(0, y) >> 0) & 0xFF), 2);
+            leftIndex = x - 1;
+            rightIndex = 0;
         } else {
-            dRxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 16) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 16) & 0xFF), 2);
-            dGxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 8) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 8) & 0xFF), 2);
-            dBxSquared = Math.pow(((pic.getRGB(x - 1, y) >> 0) & 0xFF)
-                    - ((pic.getRGB(x + 1, y) >> 0) & 0xFF), 2);
+            leftIndex = x - 1;
+            rightIndex = x + 1;
         }
 
-        gradXSquared = dRxSquared + dGxSquared + dBxSquared;
+        dRx = pic.get(leftIndex, y).getRed()
+                - pic.get(rightIndex, y).getRed();
+        dGx = pic.get(leftIndex, y).getGreen()
+                - pic.get(rightIndex, y).getGreen();
+        dBx = pic.get(leftIndex, y).getBlue()
+                - pic.get(rightIndex, y).getBlue();
 
-        double gradYSquared, dRySquared, dGySquared, dBySquared;
+        gradXSquared = dRx * dRx + dGx * dGx + dBx * dBx;
+
+        double gradYSquared, dRy, dGy, dBy;
+        int topIndex, bottomIndex;
         if (y == 0) {
             // wrap around to bottom edge (row height - 1)
-            dRySquared = Math.pow(((pic.getRGB(x, height - 1) >> 16) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 16) & 0xFF), 2);
-            dGySquared = Math.pow(((pic.getRGB(x, height - 1) >> 8) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 8) & 0xFF), 2);
-            dBySquared = Math.pow(((pic.getRGB(x, height - 1) >> 0) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 0) & 0xFF), 2);
+            topIndex = height - 1;
+            bottomIndex = y + 1;
         } else if (y == height - 1) {
             // wrap around to top edge (row 0)
-            dRySquared = Math.pow(((pic.getRGB(x, y - 1) >> 16) & 0xFF)
-                    - ((pic.getRGB(x, 0) >> 16) & 0xFF), 2);
-            dGySquared = Math.pow(((pic.getRGB(x, y - 1) >> 8) & 0xFF)
-                    - ((pic.getRGB(x, 0) >> 8) & 0xFF), 2);
-            dBySquared = Math.pow(((pic.getRGB(x, y - 1) >> 0) & 0xFF)
-                    - ((pic.getRGB(x, 0) >> 0) & 0xFF), 2);
+            topIndex = y - 1;
+            bottomIndex = 0;
         } else {
-            dRySquared = Math.pow(((pic.getRGB(x, y - 1) >> 16) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 16) & 0xFF), 2);
-            dGySquared = Math.pow(((pic.getRGB(x, y - 1) >> 8) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 8) & 0xFF), 2);
-            dBySquared = Math.pow(((pic.getRGB(x, y - 1) >> 0) & 0xFF)
-                    - ((pic.getRGB(x, y + 1) >> 0) & 0xFF), 2);
+            topIndex = y - 1;
+            bottomIndex = y + 1;
         }
+        dRy = pic.get(x, topIndex).getRed()
+                - pic.get(x, bottomIndex).getRed();
+        dGy = pic.get(x, topIndex).getGreen()
+                - pic.get(x, bottomIndex).getGreen();
+        dBy = pic.get(x, topIndex).getBlue()
+                - pic.get(x, bottomIndex).getBlue();
 
-        gradYSquared = dRySquared + dGySquared + dBySquared;
+        gradYSquared = dRy * dRy + dGy * dGy + dBy * dBy;
 
         return gradXSquared + gradYSquared;
     }
@@ -108,8 +99,8 @@ public class SeamCarver {
         Picture picTranspose = new Picture(height(), width());
         for (int i = 0; i < width(); i++) {
             for (int j = 0; j < height(); j++) {
-                int rgb = pic.getRGB(i, j);
-                picTranspose.setRGB(j, i, rgb);
+                java.awt.Color color = pic.get(i, j);
+                picTranspose.set(j, i, color);
             }
         }
 
