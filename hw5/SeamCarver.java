@@ -35,14 +35,17 @@ public class SeamCarver {
 
         if (x < 0 || x >= width
             || y < 0 || y >= height) {
-            throw new java.lang.IndexOutOfBoundsException("x: " +
-                    + x + " y: " + y + " width:" + width +
-                    " height: " + height);
+            throw new java.lang.IndexOutOfBoundsException("x: "
+                    + x + " y: " + y + " width:" + width
+                    + " height: " + height);
         }
 
         double gradXSquared, dRx, dGx, dBx;
         int leftIndex, rightIndex;
-        if (x == 0) {
+        if (width == 1) {
+            leftIndex = x;
+            rightIndex = x;
+        } else if (x == 0) {
             // wrap around to right edge (col width - 1)
             leftIndex = width - 1;
             rightIndex = x + 1;
@@ -66,7 +69,10 @@ public class SeamCarver {
 
         double gradYSquared, dRy, dGy, dBy;
         int topIndex, bottomIndex;
-        if (y == 0) {
+        if (height == 1) {
+            topIndex = y;
+            bottomIndex = y;
+        } else if (y == 0) {
             // wrap around to bottom edge (row height - 1)
             topIndex = height - 1;
             bottomIndex = y + 1;
@@ -78,6 +84,7 @@ public class SeamCarver {
             topIndex = y - 1;
             bottomIndex = y + 1;
         }
+
         dRy = pic.get(x, topIndex).getRed()
                 - pic.get(x, bottomIndex).getRed();
         dGy = pic.get(x, topIndex).getGreen()
