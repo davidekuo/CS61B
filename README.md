@@ -1,6 +1,7 @@
-**UC Berkeley CS61B Spring 2018** - https://sp18.datastructur.es
+## UC Berkeley CS61B Spring 2018 
+https://sp18.datastructur.es
 
-Projects
+### Projects
 - [x] Project 0: NBody
 - [x] Project 1A: Data Structures
 - [x] Project 1B: Testing and HoFs
@@ -12,7 +13,7 @@ Projects
 - [x] Project 3 Part 3: BearMaps (Route Search)
 - [ ] **Project 3 Gold: BearMaps (Turn by turn Navigation, Autocompletion and Search)**
 
-Labs
+### Labs
 - [x] Lab 1: javac, java, git
 - [x] Lab 2: IDEs
 - [x] Lab 3: Testing, Debugging
@@ -28,7 +29,7 @@ Labs
 - [x] Lab 14: Fractal Sound
 - [ ] **Makeup Lab 15: HugLife**
 
-Homeworks
+### Homeworks
 - [x] Homework 0: NBody
 - [x] Homework 1: Java Syntax and Sound Synthesis
 - [x] Homework 2: Percolation
