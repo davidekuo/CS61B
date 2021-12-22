@@ -21,7 +21,7 @@ https://sp18.datastructur.es
 - [x] Lab 5: Getting Started with Project 2
 - [x] Lab 6: Interactivity in Project 2
 - [x] Lab 7, 8: work on Project 2
-- [x] Lab 9: Tree vs. hash Map
+- [x] Lab 9: Tree vs. Hash Map
 - [x] Lab 10: Heap Min PQ
 - [x] Lab 11: Graphs
 - [x] Lab 12: Merge and Quick Sort
